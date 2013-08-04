@@ -127,10 +127,6 @@ class EksiApi :
 		parsed_html = self.__get_sozluk_response(path, None)
 		return str(parsed_html.find('form', attrs={'data-filternameparameter': self.entry_link_identifier_1 , 'data-keywordsearchaction' : self.entry_link_identifier_2}).attrs[2][1])
 
-	def test(self) :
-
-		return self.get_entries_by_headline('gundem',1)
-
 	def __get_sozluk_response(self, path, params) :
 
 		self.curl.setopt(pycurl.URL, self.url + path)
