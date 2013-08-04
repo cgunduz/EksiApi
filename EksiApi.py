@@ -39,9 +39,37 @@ class EksiApi :
 			for headline in headlines_list:
 
 				clean_headline = BeautifulSoup(str(headline))
-				expected_length = -1 * (len(clean_headline.find('a').text) - clean_headline.find('a').text.index('&nbsp;'))
-				gundem_instance = { 'content': headline.text[:expected_length] , 'popularity': clean_headline.find('small').text, 'hyperlink' : clean_headline.find('a').attrs[1][1]}
-				headline_list.append(gundem_instance)
+
+				# :(
+				try :
+
+					expected_length = -1 * (len(clean_headline.find('a').text) - clean_headline.find('a').text.index('&nbsp;'))
+					content = headline.text[:expected_length]
+
+				except ValueError :
+
+					expected_length = 0
+					content = headline.text
+
+				if clean_headline.find('small') == None :
+
+					popularity = 1
+
+				else :
+
+					popularity = clean_headline.find('small').text
+
+				# :(
+				try :
+
+					hyperlink = clean_headline.find('a').attrs[1][1]
+
+				except IndexError :
+
+					hyperlink = clean_headline.find('a').attrs[0][1]
+
+				instance = { 'content': content , 'popularity': popularity, 'hyperlink' : hyperlink}
+				headline_list.append(instance)
 		
 		return json.dumps(headline_list, indent=4, separators=(',',':'))
 
@@ -62,7 +90,6 @@ class EksiApi :
 		for page in range(1,page_amount+1) :
 
 			path = path + 'p=' + str(page)
-			print path
 			parsed_html = self.__get_sozluk_response(path, None) 
 			enrty_list_10 = self.__get_entries_on_a_single_page(parsed_html)
 
@@ -107,7 +134,6 @@ class EksiApi :
 	def __get_sozluk_response(self, path, params) :
 
 		self.curl.setopt(pycurl.URL, self.url + path)
-		print self.url + path
 		responseString = StringIO.StringIO()
 		self.curl.setopt(pycurl.WRITEFUNCTION, responseString.write)
 		self.curl.setopt(pycurl.FOLLOWLOCATION, 1)
