@@ -8,19 +8,16 @@
 
     * Be sure to check UsageExamples.py 
 
-# Channel
+### Channel
 
 ```python
 from EksiApi import EksiApi
-import json
-
-api = EksiApi()
-print api.get_channel('gundem')
+print EksiApi().get_channel('gundem')
 ```
 
-# Headline
+### Headline
 
 ```python
-import eksi
-print api.get_entries_by_headline('ali topu at', 1) 
+from EksiApi import EksiApi
+print EksiApi().get_entries_by_headline('ali topu at', 1) 
 ```
